@@ -16,7 +16,6 @@ def getCompany():
     mysql_cur = mysql_conn.cursor()
 
     today = datetime.datetime.today() + datetime.timedelta(days=1)
-    today = datetime.datetime.today()
 
     try:
         mysql_cur.execute("select symbol, company_name, ipo_year, last_crawel_date_stock from us_stock.nasdaq_company where is_delete is null;")
@@ -60,13 +59,13 @@ def getStock(_symbol, _start_date, _end_date):
     
     mysql_cur = mysql_conn.cursor()
 
-    #mysql_cur.execute("delete from us_stock.stock where date >= %s and date <= %s and symbol = %s", (_start_date, _end_date, _symbol))
-    #mysql_conn.commit()
+    mysql_cur.execute("delete from us_stock.stock where date >= %s and date <= %s and symbol = %s", (_start_date, _end_date, _symbol))
+    mysql_conn.commit()
 
     try:
         #yf.download already returns a DataFrame.
         stock_price = yf.download(_symbol, start=_start_date, end=_end_date)
-        #print(stock_price)
+        print(stock_price)
         
         for index, row in stock_price.iterrows():
             _date = index.strftime("%Y-%m-%d")
@@ -78,8 +77,10 @@ def getStock(_symbol, _start_date, _end_date):
             _volume = str(row["Volume"])
         
             mysql_cur.execute("insert into us_stock.stock (date, symbol, open, high, low, close, adj_close, volume) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (_date, _symbol, _open, _high, _low, _close, _adj_close, _volume))
+        mysql_conn.commit()
 
-        #mysql_cur.execute("update us_stock.nasdaq_company set last_sale = %s, open = %s, high = %s, low = %s, close = %s, adj_close = %s, volume = %s, last_crawel_date_stock = %s where symbol = %s", (_close, _open, _high, _low, _close, _adj_close, _volume, _date, _symbol))
+        
+        mysql_cur.execute("update us_stock.nasdaq_company set open = %s, high = %s, low = %s, close = %s, adj_close = %s, volume = %s, last_crawel_date_stock = %s where symbol = %s", (_open, _high, _low, _close, _adj_close, _volume, _date, _symbol))
         mysql_conn.commit()
         
     except Exception as e:

@@ -8,7 +8,6 @@ drop table nasdaq_company;
 create table nasdaq_company(
 symbol varchar(255),
 company_name varchar(255),
-market_cap bigint,
 country	varchar(255),
 ipo_year int,
 sector varchar(255),
@@ -19,8 +18,10 @@ open decimal(18,2),
 high decimal(18,2),
 low decimal(18,2),
 close decimal(18,2),
-adj_close decimal(18,2)
+adj_close decimal(18,2),
+volume bigint
 );
+
 alter table nasdaq_company add primary key (symbol);
 
 create table stock(
