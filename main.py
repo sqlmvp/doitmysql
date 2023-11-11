@@ -3,19 +3,19 @@ from datetime import datetime, timedelta
 import pymysql
 import pandas as pd
 import yfinance as yf
-import datetime
 
 
 
 
-mysql_conn = pymysql.connect(host='172.30.1.78', user='root', password='doitmysql', db='us_stock')
+
+mysql_conn = pymysql.connect(host='localhost', user='root', password='doitmysql', db='us_stock')
 
 
 def getCompany():
     
     mysql_cur = mysql_conn.cursor()
 
-    today = datetime.datetime.today() + datetime.timedelta(days=1)
+    today = datetime.today() + timedelta(days=1)
 
     try:
         mysql_cur.execute("select symbol, company_name, ipo_year, last_crawel_date_stock from us_stock.nasdaq_company where is_delete is null;")
