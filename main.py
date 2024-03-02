@@ -6,6 +6,11 @@ import yfinance as yf
 
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 56edc4e324af5c013d5f7b2ab77cf75cbe0dc585
 mysql_conn = pymysql.connect(host='localhost', user='root', password='doitmysql', db='us_stock')
 
 
